@@ -21,6 +21,7 @@ def get_text(text_id: str) -> Response:
 
     response = make_response(
         jsonify({
+            'text_id':  content[0][0],
             'text': content[0][1],
         }),
         200,
@@ -76,8 +77,9 @@ def get_summary(text_id: str) -> Response:
 
     response = make_response(
         jsonify({
-            "document_id": "example_id",
-            "summary": f"This is the summary of text {text_id}",
+            "id":  content[0][0],
+            "text_id": content[0][1],
+            "summary": content[0][2],
         }),
         200,
     )

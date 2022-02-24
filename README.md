@@ -2,6 +2,44 @@
 
 ## Api
 
+Application exposes three endpoints
+
+Request:
+```
+GET /text/{id}
+```
+Response:
+```
+{
+    "text_id": string,
+    "text": string,
+}
+```
+
+Request:
+```
+POST /text {'text': 'content'}
+```
+Response:
+```
+{
+    "text_id": string,
+}
+```
+
+Request:
+```
+GET /summary/{text_id}
+```
+Response:
+```
+{
+    "id": string,
+    "summary": string,
+    "text_id": string,
+}
+```
+
 ## Setup
 
 ### Download
@@ -46,9 +84,17 @@ then install all the dependencies
 python -m pip -r requirements.txt
 ```
 
+### Launch the tests
+
+Run in the main folder
+
+```
+python -m pytest
+```
+
 ### Launch the flask server
 
 ```
-python app.py
+python ./app.py
 ```
 
