@@ -47,7 +47,7 @@ Response:
 clone the repository from github
 
 ```
-git clone TODO: setup github rep
+git clone git@github.com:verthais/squirro-task.git
 ```
 
 ### Environment

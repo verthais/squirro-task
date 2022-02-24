@@ -2,6 +2,7 @@ from flask import Blueprint
 from werkzeug.exceptions import BadRequest, NotFound
 from flask import jsonify, make_response, request, Response
 from database import Summary, Text
+from summary import summarize
 
 
 api_bp = Blueprint('api', __name__)
@@ -42,6 +43,9 @@ def store_text() -> Response:
     if content is None:
         raise BadRequest('Request data missing {text}')
 
+    if content is '':
+        raise BadRequest('Request data is empty')
+
     db_text = Text()
     db_text.connect(DATABASE_NAME)
     # TODO: compress text before storing
@@ -50,8 +54,7 @@ def store_text() -> Response:
     db_sum = Summary()
     db_sum.connect(DATABASE_NAME)
     # TODO: compress summary before storing
-    # TODO: generate summary
-    sumamry = ''
+    sumamry = summarize(content)
     sum_id = db_sum.put(values=[str(text_id), sumamry])
 
 

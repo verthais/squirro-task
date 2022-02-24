@@ -1,3 +1,6 @@
 Flask==2.1.0
 schema==0.7.5
 pytest==7.0.1
+nltk==3.7
+numpy==1.22.2
+networkx==2.6.3
