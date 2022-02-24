@@ -1,7 +1,7 @@
-import pdb
 import sqlite3
+import logging
 from schema import Schema
-from uuid import uuid4
+from uuid import uuid4, UUID
 
 class DatabaseError(Exception):
     "Error for the database events"
@@ -15,7 +15,12 @@ class Database():
         self.connection = None
 
     @classmethod
-    def create(cls, database_name):
+    def create(cls, database_name: str) -> None:
+        '''
+            args:
+                database_name: str - target database name for table creation
+        '''
+        logger = logging.getLogger(f'DB:create:{cls.table_name}')
         cmd = "CREATE TABLE {table}({columns})"
         cols = ','.join(cls.schema.schema.keys())
         cmd = cmd.format(
@@ -26,6 +31,7 @@ class Database():
         connection = sqlite3.connect(database_name)
         currsor = connection.cursor()
 
+        logger.info('Creating table %s -- %s', cls.table_name, cmd)
         currsor.execute(cmd)
         connection.commit()
         connection.close()
@@ -54,7 +60,7 @@ class Database():
     def _put_cmd(self, cmd, id, **kwargs):
         if kwargs.get('values'):
             # TODO: support all types
-            values = f'"{id}","' + '","'.join(kwargs.get('values')) + '"'
+            values = f'"{str(id)}","' + '","'.join(kwargs.get('values')) + '"'
         else:
             raise DatabaseError('no values to insert')
 
@@ -87,7 +93,7 @@ class Database():
         data = list(cur.execute(cmd))
         return data
 
-    def put(self, **kwargs):
+    def put(self, **kwargs) -> UUID:
         '''
             kwargs:
                 dry_run: bool - flag to get the raw querry
@@ -130,7 +136,9 @@ class Summary(Database):
     def __init__(self):
         super().__init__()
 
-def migrate(database_name):
+
+def migrate(database_name) -> None:
+    'initialize database'
     tables = [
         Text,
         Summary,
