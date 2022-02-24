@@ -1,7 +1,8 @@
 import uuid
 from flask import Flask, jsonify, make_response, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
+from database import Summary, Text, Schema
 
 def create_app(name: str) -> Flask:
     return Flask(name)
@@ -11,14 +12,19 @@ app = create_app('squirro-app')
 
 @app.route('/text/<text_id>', methods=['GET'])
 def get_text(text_id: str):
+    text = Text()
+    content = text.get({'where':{'id': text_id}})
+
+    if content is None:
+        raise NotFound(f'Not found text with id: {text_id}')
+
+
     response = make_response(
         jsonify({
-            'text': f'text with id {text_id}',
+            'text': content[0][1],
         }),
         200,
     )
-
-    # TODO: retrieve the text from <??>
 
     response.headers["Content-Type"] = "application/json"
     return response
@@ -50,6 +56,12 @@ def store_text():
 
 @app.route('/summary/<text_id>')
 def get_summary(text_id: str):
+    summary = Summary()
+    content = summary.get({'where': {'text_id': text_id}})
+
+    if content is None:
+        raise NotFound(f'Not found Summary corelated with text with id {text_id}')
+
     response = make_response(
         jsonify({
             "document_id": "example_id",
@@ -58,22 +70,30 @@ def get_summary(text_id: str):
         200,
     )
 
-    # TODO: retrieve the corresponding summary from <??>
 
     response.headers["Content-Type"] = "application/json"
     return response
+
+
+def make_error_response(code: int, err: str):
+    response = make_response(
+        jsonify({
+            'message': err,
+        }),
+        code,
+    )
+    response.headers["Content-Type"] = "application/json"
+    return response
+
+
+@app.errorhandler(NotFound)
+def handle_not_found_request(e):
+    return make_error_response(404, str(e))
 
 
 @app.errorhandler(BadRequest)
 def handle_bad_request(e):
-    response = make_response(
-        jsonify({
-            'message': str(e),
-        }),
-        400,
-    )
-    response.headers["Content-Type"] = "application/json"
-    return response
+    return make_error_response(400, str(e))
 
 
 def main():
