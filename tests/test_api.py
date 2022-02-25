@@ -30,14 +30,20 @@ def runner(app):
 def gen_id():
     return str(uuid4())
 
-def test_edit_user(client):
-    content = (
+
+@pytest.fixture()
+def content():
+    text = (
         "The Florida House of Representatives on Thursday approved legislation that would ban certain discussions of gender identity and sexual orientation in schools."
         "I believe in the idea that creating boundaries at an early age of what is appropriate in our schools — when we are funding our schools — is not hate,” the bill’s sponsor, state Rep. Joe Harding (R), said during the vote."
         "It's actually providing boundaries, and it's fair to our teachers and our school districts to know what we expect."
         "But those against Harding’s bill called it a hateful and needless attack on the state’s young LGBTQ+ population, which already faces greater risk of mental illness, self-harm and suicide."
         "Despite overwhelming public outrage, polling data underscoring immense unpopularity with voters, and hours of testimony from LGBTQ families, Republican legislators voted to pass the ‘Don’t Say Gay’ bill and ‘Stop WOKE’ Act in the Florida House. If signed into law, these bills will have disastrous impacts on classrooms and workplaces,” the LGBTQ+ advocacy group Equality Florida said in a statement immediately following the vote. “They will turn Florida into a surveillance state and give the government broad license to censor conversations about American history, the origins of racism and injustice, and the existence of LGBTQ people."
     )
+    return text
+
+
+def test_edit_user(client, content):
     response = client.post(
         "/text",
         json={
