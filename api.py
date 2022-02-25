@@ -17,7 +17,7 @@ def get_text(text_id: str) -> Response:
     text.connect(DATABASE_NAME)
     content = text.get(where={'id': text_id})
 
-    if content is None:
+    if content is None or len(content) == 0:
         raise NotFound(f'Not found text with id: {text_id}')
 
     response = make_response(
@@ -75,7 +75,7 @@ def get_summary(text_id: str) -> Response:
     summary.connect(DATABASE_NAME)
     content = summary.get(where = {'text_id': text_id})
 
-    if content is None:
+    if content is None or len(content) == 0:
         raise NotFound(f'Not found Summary corelated with text with id {text_id}')
 
     response = make_response(
