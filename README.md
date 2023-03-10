@@ -1,45 +1,5 @@
 # Squirro text project
 
-## Api
-
-Application exposes three endpoints
-
-Request:
-```
-GET /text/{id}
-```
-Response:
-```
-{
-    "text_id": string,
-    "text": string,
-}
-```
-
-Request:
-```
-POST /text {'text': 'content'}
-```
-Response:
-```
-{
-    "text_id": string,
-}
-```
-
-Request:
-```
-GET /summary/{text_id}
-```
-Response:
-```
-{
-    "id": string,
-    "summary": string,
-    "text_id": string,
-}
-```
-
 ## Setup
 
 ### Download
@@ -96,5 +56,45 @@ python -m pytest
 
 ```
 python ./app.py
+```
+
+## Api
+
+Application exposes three endpoints
+
+Request:
+```
+GET /text/{id}
+```
+Response:
+```
+{
+    "text_id": string,
+    "text": string,
+}
+```
+
+Request:
+```
+POST /text {'text': 'content'}
+```
+Response:
+```
+{
+    "text_id": string,
+}
+```
+
+Request:
+```
+GET /summary/{text_id}
+```
+Response:
+```
+{
+    "id": string,
+    "summary": string,
+    "text_id": string,
+}
 ```
 
